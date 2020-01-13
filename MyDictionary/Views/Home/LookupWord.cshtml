@@ -1,0 +1,100 @@
+﻿@{
+    //ViewData["Title"] = "Home Page";
+}
+@model MyDictionary.Web.ViewModels.LookupWordViewModel
+
+
+<div class="text-center">
+    <h1 class="display-4">My Dictionary</h1>
+</div>
+<partial name="/Views/Shared/_Search.cshtml">
+@if(Model != null)
+{
+    <div class="col-md-12">
+
+        <h3>
+            @@Model.WordDisplay
+        </h3>
+
+        <span style="color: #70757A; line-height: 16px; font-size: 14px">
+        /
+        <span>@Model.Pronunciation</span>
+        /
+        </span>
+        
+        
+    </div>
+    <div class="col-md-12">
+        @Html.DisplayFor(m => Model.Results)
+    </div>
+}
+    
+    
+
+    @section Scripts {
+     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+               <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<!-- Javascript -->
+      <script type="text/javascript">
+          
+
+          $(function(){
+            $("#word").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Home/StringSearch/?searchString=" + request.term,
+                        method: 'get',
+                        success: function (data) {
+                            //alert(data);
+
+                            var obj = $.parseJSON(data);
+                            response(obj.results.data);
+
+
+                            //alert(obj.results.data);
+
+                            ////alert(data);
+                            //var parsed = JSON.parse(data);
+                            //var newArray = new Array(parsed.length);
+                            ////alert(parsed.length);
+                            //var i = 0;
+
+                            //parsed.forEach(function (entry) {
+                            //    //alert(entry)
+                            //    newArray[i] = entry;
+                            //    i++;
+                            //});
+
+                            //response(newArray);
+                        }
+                    });
+                },
+                error: function (message) {
+                    alert(message);
+                },
+                autoFocus:true
+           });
+        });
+           //  $("#word").autocomplete({  
+           //      source: "/Home/StringSearch/?searchString=a",
+           //      autoFocus: true,
+           //      select: function (event, ui) {
+           //         //Tags for display              
+           //         this.value = ui.item.value;
+           //         return false;
+           //     }
+           //})
+       //});  
+         //   var availableTutorials = [
+         //      "ActionScript",
+         //      "Bootstrap",
+         //      "C",
+         //      "C++",
+         //   ];
+         //   $( "#word" ).autocomplete({
+         //      source: availableTutorials,
+         //      autoFocus:true
+         //   });
+         //});
+      </script>
+}

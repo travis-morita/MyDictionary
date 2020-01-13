@@ -1,0 +1,29 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDictionary.Web", "MyDictionary\MyDictionary.Web.csproj", "{B9BB5ECD-7712-484A-A523-BDC06BBB9F2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDictionary.Core", "MyDictionary.Core\MyDictionary.Core.csproj", "{EEBFE67A-FB2D-4343-897E-7339FB0E6237}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDictionary.Infrastructure", "MyDictionary.Infrastructure\MyDictionary.Infrastructure.csproj", "{BA90B878-7B7F-4D99-8BB5-66F5030A483A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9BB5ECD-7712-484A-A523-BDC06BBB9F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9BB5ECD-7712-484A-A523-BDC06BBB9F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9BB5ECD-7712-484A-A523-BDC06BBB9F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9BB5ECD-7712-484A-A523-BDC06BBB9F2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEBFE67A-FB2D-4343-897E-7339FB0E6237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEBFE67A-FB2D-4343-897E-7339FB0E6237}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEBFE67A-FB2D-4343-897E-7339FB0E6237}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEBFE67A-FB2D-4343-897E-7339FB0E6237}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA90B878-7B7F-4D99-8BB5-66F5030A483A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA90B878-7B7F-4D99-8BB5-66F5030A483A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA90B878-7B7F-4D99-8BB5-66F5030A483A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA90B878-7B7F-4D99-8BB5-66F5030A483A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
