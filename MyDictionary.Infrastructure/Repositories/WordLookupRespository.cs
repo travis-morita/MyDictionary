@@ -46,18 +46,7 @@ namespace MyDictionary.Infrastructure.Respositories
             throw new System.Exception(response.ReasonPhrase);
         }
 
-
-
-        //public void FindWord(string word)
-        //{
-        //    //var client = new RestClient("https://wordsapiv1.p.rapidapi.com/words/%7Bword%7D");
-        //    //var request = new RestRequest(Method.GET);
-        //    //request.AddHeader("x-rapidapi-host", "wordsapiv1.p.rapidapi.com");
-        //    //request.AddHeader("x-rapidapi-key", "433ee81754mshd7eaa03edec82d5p1609e6jsn5b1a086d7b86");
-        //    //IRestResponse response = client.Execute(request);
-        //}
-
-        public async Task<WordLookup> GetWord(string word)
+        public async Task<Word> GetWord(string word)
         {
             if (word is null)
             {
@@ -74,7 +63,7 @@ namespace MyDictionary.Infrastructure.Respositories
 
             if (response.IsSuccessStatusCode)
             {
-                var wordLookup = JsonConvert.DeserializeObject<WordLookup>(response.Content.ReadAsStringAsync().Result);
+                var wordLookup = JsonConvert.DeserializeObject<Word>(response.Content.ReadAsStringAsync().Result);
 
                 return wordLookup;
             }

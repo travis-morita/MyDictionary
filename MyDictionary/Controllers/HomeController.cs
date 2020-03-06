@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Core.Domain;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 
 namespace MyDictionary.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -40,7 +42,7 @@ namespace MyDictionary.Controllers
             //var word = HttpContext.Request.Form["word"][0];
             var wordLookup = await _repository.GetWord(word);
             var lookupWordViewModel = wordLookup.ToLookupWordViewModel();
-            lookupWordViewModel.Results = wordLookup.Results.ToResultViewModelList();
+            lookupWordViewModel.Results = wordLookup?.WordDetails?.ToResultViewModelList();
 
             return View("Index", lookupWordViewModel);
         }
@@ -58,6 +60,17 @@ namespace MyDictionary.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult Save(ResultViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var word = model.IsSaved;
+            }
+
+            return View("Home");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace MyDictionary.Core.Domain
 {
-    public class Result
+    public class WordDetails
     {
         public string Definition { get; set; }
 

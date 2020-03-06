@@ -8,5 +8,6 @@ namespace MyDictionary.Web.ViewModels
         public string PartOfSpeech { get; set; }
         public string Definition { get; set; }
         public string[] Synonyms { get; set; }
+        public bool IsSaved { get; set; }
     }
 }

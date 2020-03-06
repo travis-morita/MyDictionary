@@ -5,7 +5,7 @@ namespace MyDictionary.Infrastructure.Interfaces
 {
     public interface IWordLookupRepository
     {
-        Task<WordLookup> GetWord(string word);
+        Task<Word> GetWord(string word);
         Task<string> GetSearchResult(string searchString);
     }
 }

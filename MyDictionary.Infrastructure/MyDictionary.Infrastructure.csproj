@@ -14,13 +14,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyDictionary.Core\MyDictionary.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Respository\RepositoryBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.30" />
   </ItemGroup>
 </Project>

@@ -7,15 +7,15 @@ namespace MyDictionary.Web.Data.Mapping
 {
     public static class Extensions_ObjectToViewModel
     {
-        public static LookupWordViewModel ToLookupWordViewModel(this WordLookup wordLookup)
+        public static LookupWordViewModel ToLookupWordViewModel(this Word wordLookup)
         {
-            return new LookupWordViewModel(wordLookup.Word, wordLookup.Syllables, wordLookup.Pronunciation);
+            return new LookupWordViewModel(wordLookup.Spelling, wordLookup.Syllables, wordLookup.Pronunciation);
         }
 
-        public static List<ResultViewModel> ToResultViewModelList(this Result[] results)
+        public static List<ResultViewModel> ToResultViewModelList(this WordDetails[] results)
         {
             var resultsList = new List<ResultViewModel>();
-            foreach(Result result in results)
+            foreach(WordDetails result in results)
             {
                 resultsList.Add(new ResultViewModel { Definition = result.Definition, PartOfSpeech = result.PartOfSpeech, Synonyms = result.Synonyms });
             }
