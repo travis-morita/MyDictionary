@@ -1,10 +1,11 @@
 ﻿using MyDictionary.Core.Domain;
-using System.Threading.Tasks;
 
 namespace MyDictionary.Infrastructure.Interfaces
 {
-    public interface IUserWordRepository
+    public interface IUserWordRepository : IRepository<UserWord>
     {
-        Task<UserWord> GetUserWord(string word);
+        UserWord GetUserWord(UserWord userWord);
+
+        
     }
 }

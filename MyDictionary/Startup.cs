@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyDictionary.Core.Domain;
 using MyDictionary.Infrastructure.Interfaces;
+using MyDictionary.Infrastructure.Repositories;
 using MyDictionary.Infrastructure.Respositories;
 
 namespace MyDictionary
@@ -85,8 +87,7 @@ namespace MyDictionary
                 });
 
             services.AddSingleton<IWordLookupRepository>(s => new WordLookupRespository("MyConnectionString"));
-            services.AddSingleton<IUserWordRepository>(s => new 
-                IUserWordRepository(Configuration.GetConnectionString("MyDictionaryWebContextConnection")));
+            services.AddSingleton<IUserWordRepository>(s => new UserWordRepository(Configuration.GetConnectionString("UserWordConnection")));
             //services.AddRazorPages();
 
            

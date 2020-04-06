@@ -3,7 +3,9 @@
 
 Configuration of the Identity related services can be found in the Areas/Identity/IdentityHostingStartup.cs file.
 
-If your app was previously configured to use Identity, then you should remove the call to the AddIdentity method from your ConfigureServices method.
+If your app was previously configured to use Identity, then you should remove the call to the 
+
+method from your ConfigureServices method.
 
 The generated UI requires support for static files. To add static files to your app:
 1. Call app.UseStaticFiles() from your Configure method

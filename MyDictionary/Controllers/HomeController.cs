@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Core.Domain;
 using MyDictionary.Infrastructure.Interfaces;
+using MyDictionary.Infrastructure.Repositories;
 using MyDictionary.Models;
 using MyDictionary.Web.Data.Mapping;
 using MyDictionary.Web.ViewModels;
@@ -18,16 +19,19 @@ namespace MyDictionary.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IWordLookupRepository _repository;
+        private readonly IUserWordRepository _userWordRepository;
 
-        public HomeController(IWordLookupRepository repository, ILogger<HomeController> logger)
+        public HomeController(IWordLookupRepository repository, IUserWordRepository userWordRepository, ILogger<HomeController> logger)
         {
             _repository = repository;
+            _userWordRepository = userWordRepository;
             _logger = logger;
         }
 
         
         public IActionResult Index()
         {
+            var test = _userWordRepository.GetUserWord(new UserWord { UserId = 1, Spelling = "test" });
             return View();
         }
 
@@ -63,11 +67,11 @@ namespace MyDictionary.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save(ResultViewModel model)
+        public IActionResult Save(LookupWordViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var word = model.IsSaved;
+                //var word = model.IsSaved;
             }
 
             return View("Home");

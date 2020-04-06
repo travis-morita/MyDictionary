@@ -4,25 +4,32 @@
 <div class="row mb-3">
     <div class="col-md-12">
          <span style="font-style: italic;">
+            <input hidden asp-for="PartOfSpeech" />
             @Model?.PartOfSpeech  
         </span>
     </div>
     <div class="col-md-12 ml-2 ">
-        @Model.Definition
-        <br />   
-        
-        @if (Model.Synonyms != null)
+        @if (Model != null)
         {
-            <span style="color: #188038;">Similar: </span>
-            
-            @foreach (var synonym in Model.Synonyms)
+            @if (Model.Synonyms != null)
             {
-                <span class="pr-3">@synonym</span>
+                <span style="color: #188038;">Similar: </span>
+
+                @foreach (var synonym in Model.Synonyms)
+                {
+                    <span class="pr-3">@synonym</span>
+                }
             }
+
         }
+        <input hidden asp-for="Definition" />
+
+        @Model.Definition
     </div>
+    <br />   
+     
     <div class="col-md-12">
-        <input asp-for="@Model.IsSaved" name="IsSaved" type="checkbox" />  
+        <input asp-for="@Model.IsSaved" type="checkbox" />  
     </div>
     
 </div>

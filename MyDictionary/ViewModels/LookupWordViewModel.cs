@@ -10,6 +10,8 @@ namespace MyDictionary.Web.ViewModels
         private string _wordDisplay;
         private string _pronunciation;
        
+        public LookupWordViewModel()
+        { }
 
         public LookupWordViewModel(string word, Syllables syllables, Pronunciation pronunciation)
         {
