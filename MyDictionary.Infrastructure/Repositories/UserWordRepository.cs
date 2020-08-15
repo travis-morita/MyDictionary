@@ -36,7 +36,7 @@ namespace MyDictionary.Infrastructure.Repositories
                                 INNER JOIN WordDetails WD ON WD.Spelling = UW.Word
                                 WHERE UW.UserId = @UserId AND UW.Word = @Word";
                 conn.Open();
-                var result = conn.Query<UserWord>(sQuery, new { UserId = userWord.UserId, Word = userWord.Spelling });
+                var result = conn.Query<UserWord>(sQuery, new { userWord.UserId, Word = userWord.Spelling });
                 return result.FirstOrDefault();
             }
         }
@@ -47,7 +47,7 @@ namespace MyDictionary.Infrastructure.Repositories
             {
                 string sQuery = @"DELETE FROM UserWord = @UserId";
                 conn.Open();
-                var result = conn.Execute(sQuery, new { UserId = userWord.UserId });
+                var result = conn.Execute(sQuery, new { userWord.UserId });
             }
 
         }
@@ -58,7 +58,7 @@ namespace MyDictionary.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        void Create(UserWord userWord)
+        public int Create(UserWord userWord)
         {
             using (var connection = Connection)
             {
@@ -66,24 +66,55 @@ namespace MyDictionary.Infrastructure.Repositories
 
                 using (IDbConnection conn = Connection)
                 {
-                    connection.Open();
 
-                    var affectedRows = connection.Execute(sql,
-                        new 
-                        { 
-                            UserId = userWord.UserId, 
-                            Word = userWord.Spelling,
-                            Definition = userWord.WordDetails[0].Definition,
-                            PartOfSpeech = "",
-                            Synonyms = "",
-                            SimilarTo = "",
-                            Derivation = "",
-                            Examples = ""
-                        },
-                        commandType: CommandType.StoredProcedure);
+                    DynamicParameters ps = new DynamicParameters();
+                    ps.Add("@UserId", userWord.UserId, DbType.String, direction: ParameterDirection.Input);
+                    ps.Add("@Word", userWord.Spelling, DbType.String, direction: ParameterDirection.Input);
+                    ps.Add("@UserWordId", DbType.Int32, direction: ParameterDirection.Output);
+
+                    conn.Open();
+
+                    using (var transaction = conn.BeginTransaction())
+                    {
+
+                        var result = conn.Execute(sql, ps, commandType: CommandType.StoredProcedure, transaction: transaction);
+                        var userWordId = ps.Get<int>("UserWordId");
+
+                        userWord.WordDetails.ForEach(detail =>
+                        {
+
+                            result = conn.Execute("InsertUserWordDetails",
+                                new
+                                {
+                                    userWordId,
+                                    detail.Definition,
+                                    detail.PartOfSpeech,
+                                    Synonyms = String.Join(", ", detail.Synonyms),
+                                    detail.SimilarTo,
+                                    detail.Derivation,
+                                    detail.Examples
+                                },
+                                commandType: CommandType.StoredProcedure,
+                                transaction: transaction);
+                            
+                        });
+
+                        transaction.Commit();
+                    }
+
+
+
+                    return 0; // userWordId;
+
+                    //DynamicParameters _params = new DynamicParameters();
+                    //_params.Add("@newId", DbType.Int32, direction: ParameterDirection.Output);
+                    //var result = connection.Execute("[dbo].YourProc", _params, null, null, CommandType.StoredProcedure);
+                    //var retVal = _params.Get<int>("newId");
                 }
             }
         }
+
+
 
         void IRepository<UserWord>.Create(UserWord entity)
         {

@@ -23,8 +23,10 @@
         <form asp-controller="Home" asp-action="Save" method="post">
             @if (Model.Results != null)
             {
+                <input hidden asp-for="UserId" />
+                <input hidden asp-for="Spelling" />
                 @Html.DisplayFor(m => Model.Results)
-                <input id="inputSubmit" type="submit" value="Save" />
+                <input id="inputSubmit" type="submit" value="Save" class="btn btn-primary" />
 
             }
             else

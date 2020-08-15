@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Core.Domain;
@@ -31,7 +35,8 @@ namespace MyDictionary.Controllers
         
         public IActionResult Index()
         {
-            var test = _userWordRepository.GetUserWord(new UserWord { UserId = 1, Spelling = "test" });
+            var uid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var test = _userWordRepository.GetUserWord(new UserWord { UserId = "", Spelling = "test" });
             return View();
         }
 
@@ -47,7 +52,7 @@ namespace MyDictionary.Controllers
             var wordLookup = await _repository.GetWord(word);
             var lookupWordViewModel = wordLookup.ToLookupWordViewModel();
             lookupWordViewModel.Results = wordLookup?.WordDetails?.ToResultViewModelList();
-
+            lookupWordViewModel.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View("Index", lookupWordViewModel);
         }
 
@@ -67,14 +72,45 @@ namespace MyDictionary.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save(LookupWordViewModel model)
+        public IActionResult Save(SaveWordViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //var word = model.IsSaved;
+
+                var wordDetailsList = model.Results.Where(m => m.IsSaved == true)
+                    .Select(w => new WordDetails
+                    {
+                        Definition = w.Definition,
+                        PartOfSpeech = w.PartOfSpeech,
+                        Synonyms = w.Synonyms
+                    }).ToList();
+
+                //List<WordDetails> wordDetailsList = new List<WordDetails>();
+
+                //foreach (var result in model.Results)
+                //{
+                //    if (result.IsSaved)
+                //    {
+                //        var wordDetails = new WordDetails
+                //        {
+                //            Definition = result.Definition,
+                //            PartOfSpeech = result.PartOfSpeech,
+                //            Synonyms = result.Synonyms
+                //        };
+
+                //        wordDetailsList.Add(wordDetails);
+                //    }  
+                //}
+
+                var userWordId = _userWordRepository.Create(
+                    new UserWord { 
+                        UserId = model.UserId, 
+                        Spelling = model.Spelling,
+                        WordDetails = wordDetailsList 
+                    });
             }
 
-            return View("Home");
+            return RedirectToAction("Home");
         }
     }
 }

@@ -6,6 +6,6 @@ namespace MyDictionary.Infrastructure.Interfaces
     {
         UserWord GetUserWord(UserWord userWord);
 
-        
+        int Create(UserWord userWord);
     }
 }

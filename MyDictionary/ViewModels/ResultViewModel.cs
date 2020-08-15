@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MyDictionary.Core.Domain;
 
 namespace MyDictionary.Web.ViewModels
@@ -7,7 +8,7 @@ namespace MyDictionary.Web.ViewModels
     {
         public string PartOfSpeech { get; set; }
         public string Definition { get; set; }
-        public string[] Synonyms { get; set; }
+        public List<string> Synonyms { get; set; }
         public bool IsSaved { get; set; }
     }
 }

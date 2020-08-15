@@ -1,13 +1,16 @@
 ﻿
+using System.Collections.Generic;
+
 namespace MyDictionary.Core.Domain
 {
     public class WordDetails
     {
+        public int UserWordId { get; set; }
         public string Definition { get; set; }
 
         public string PartOfSpeech { get; set; }
 
-        public string[] Synonyms { get; set; }
+        public List<string> Synonyms { get; set; }
 
         public string[] SimilarTo { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace MyDictionary.Core.Domain
 {
@@ -9,7 +10,7 @@ namespace MyDictionary.Core.Domain
         public string Spelling { get; set; }
 
         [JsonProperty("Results")]
-        public WordDetails[] WordDetails { get; set; }
+        public List<WordDetails> WordDetails { get; set; }
 
         public Syllables Syllables { get; set; }
 

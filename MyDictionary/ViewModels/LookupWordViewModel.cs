@@ -6,16 +6,19 @@ namespace MyDictionary.Web.ViewModels
 {
     public class LookupWordViewModel
     {
-        private string _syllableDisplay;
+        private string _spelling;
         private string _wordDisplay;
+        private string _syllableDisplay;
         private string _pronunciation;
        
         public LookupWordViewModel()
         { }
 
-        public LookupWordViewModel(string word, Syllables syllables, Pronunciation pronunciation)
+        public LookupWordViewModel(string spelling, Syllables syllables, Pronunciation pronunciation)
         {
-            _wordDisplay = word;
+            _spelling = spelling;
+            _wordDisplay  = spelling;
+
             if (syllables?.List?.Length > 0)
             {
                 foreach (var syllable in syllables.List)
@@ -29,6 +32,9 @@ namespace MyDictionary.Web.ViewModels
 
         }
 
+
+        public string UserId { get; set; }
+        public string Spelling { get => _spelling; set { _spelling = value; } }
         public string WordDisplay { get => _syllableDisplay ?? _wordDisplay; }
         public string Pronunciation { get => _pronunciation; }
         public List<ResultViewModel> Results { get; set; }
