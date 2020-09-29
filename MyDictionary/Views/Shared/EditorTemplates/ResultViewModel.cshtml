@@ -18,6 +18,15 @@
             {
                 <span style="color: #188038;">Similar: </span>
 
+                @*@foreach (var synonym in Model.Synonyms)
+                {
+                    <span class="pr-3">
+                        <a asp-controller="Home"
+                           asp-action="LookupWord"
+                           asp-route-word="@synonym">@synonym</a>
+                    </span>
+
+                }*@
                 /*cant use foreach and need to have individual hidden fields in order to model bind properly*/
                 @for (int i = 0; i < Model.Synonyms?.Count; i++)
                 {
@@ -30,5 +39,11 @@
             }
 
         }
-    </div>      
+    </div>
+    <br />   
+     
+    <div class="col-md-12">
+        <input asp-for="@Model.IsSaved" type="checkbox" />  
+    </div>
+    
 </div>

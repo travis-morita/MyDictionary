@@ -13,9 +13,6 @@
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MyDictionary.Core\MyDictionary.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

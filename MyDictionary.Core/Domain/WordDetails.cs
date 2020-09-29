@@ -5,7 +5,6 @@ namespace MyDictionary.Core.Domain
 {
     public class WordDetails
     {
-        public int UserWordId { get; set; }
         public string Definition { get; set; }
 
         public string PartOfSpeech { get; set; }

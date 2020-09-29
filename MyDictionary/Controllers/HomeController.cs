@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Core.Domain;
 using MyDictionary.Infrastructure.Interfaces;
-using MyDictionary.Infrastructure.Repositories;
 using MyDictionary.Models;
 using MyDictionary.Web.Data.Mapping;
 using MyDictionary.Web.ViewModels;
-using Newtonsoft.Json;
 
 namespace MyDictionary.Controllers
 {
@@ -24,9 +20,11 @@ namespace MyDictionary.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWordLookupRepository _repository;
         private readonly IUserWordRepository _userWordRepository;
+        private readonly IUserWordService _userWordService;
 
-        public HomeController(IWordLookupRepository repository, IUserWordRepository userWordRepository, ILogger<HomeController> logger)
+        public HomeController(IUserWordService userWordService, IWordLookupRepository repository, IUserWordRepository userWordRepository, ILogger<HomeController> logger)
         {
+            _userWordService = userWordService;
             _repository = repository;
             _userWordRepository = userWordRepository;
             _logger = logger;
@@ -36,7 +34,7 @@ namespace MyDictionary.Controllers
         public IActionResult Index()
         {
             var uid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var test = _userWordRepository.GetUserWord(new UserWord { UserId = "", Spelling = "test" });
+            var test = _userWordRepository.GetUserWordId(uid, "word");
             return View();
         }
 
@@ -46,13 +44,16 @@ namespace MyDictionary.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LookupWord(string word)
+        public IActionResult LookupWord(string word)
         {
-            //var word = HttpContext.Request.Form["word"][0];
-            var wordLookup = await _repository.GetWord(word);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var wordLookup = _userWordService.GetWord(word, userId);
             var lookupWordViewModel = wordLookup.ToLookupWordViewModel();
             lookupWordViewModel.Results = wordLookup?.WordDetails?.ToResultViewModelList();
-            lookupWordViewModel.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            lookupWordViewModel.UserId = userId;
+            lookupWordViewModel.IsSaved = wordLookup.Saved;
+
             return View("Index", lookupWordViewModel);
         }
 
@@ -71,46 +72,7 @@ namespace MyDictionary.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpPost]
-        public IActionResult Save(SaveWordViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
+        
 
-                var wordDetailsList = model.Results.Where(m => m.IsSaved == true)
-                    .Select(w => new WordDetails
-                    {
-                        Definition = w.Definition,
-                        PartOfSpeech = w.PartOfSpeech,
-                        Synonyms = w.Synonyms
-                    }).ToList();
-
-                //List<WordDetails> wordDetailsList = new List<WordDetails>();
-
-                //foreach (var result in model.Results)
-                //{
-                //    if (result.IsSaved)
-                //    {
-                //        var wordDetails = new WordDetails
-                //        {
-                //            Definition = result.Definition,
-                //            PartOfSpeech = result.PartOfSpeech,
-                //            Synonyms = result.Synonyms
-                //        };
-
-                //        wordDetailsList.Add(wordDetails);
-                //    }  
-                //}
-
-                var userWordId = _userWordRepository.Create(
-                    new UserWord { 
-                        UserId = model.UserId, 
-                        Spelling = model.Spelling,
-                        WordDetails = wordDetailsList 
-                    });
-            }
-
-            return RedirectToAction("Home");
-        }
     }
 }

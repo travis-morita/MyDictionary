@@ -9,7 +9,7 @@ namespace MyDictionary.Infrastructure.Interfaces
     {
         T GetById(string id);
 
-        void Create(T entity);
+        int Create(T entity);
 
         void Delete(T entity);
 

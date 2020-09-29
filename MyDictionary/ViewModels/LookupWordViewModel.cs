@@ -39,6 +39,7 @@ namespace MyDictionary.Web.ViewModels
         public string Pronunciation { get => _pronunciation; }
         public List<ResultViewModel> Results { get; set; }
         public string[] Synonyms { get; set; }
+        public bool IsSaved { get; set; }
         
     }
 }

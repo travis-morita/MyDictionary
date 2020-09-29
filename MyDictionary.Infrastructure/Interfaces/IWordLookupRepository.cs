@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using MyDictionary.Core.Domain;
+using MyDictionary.Core.Domain.Interfaces;
 
 namespace MyDictionary.Infrastructure.Interfaces
 {
     public interface IWordLookupRepository
     {
-        Task<Word> GetWord(string word);
+        ApiWord GetWord(string word);
         Task<string> GetSearchResult(string searchString);
     }
 }

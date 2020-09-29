@@ -20,73 +20,87 @@
         
     </div>
     <div class="col-md-12">
-        <form asp-controller="Home" asp-action="Save" method="post">
-            @if (Model.Results != null)
-            {
-                <input hidden asp-for="UserId" />
-                <input hidden asp-for="Spelling" />
-                @Html.DisplayFor(m => Model.Results)
-                <input id="inputSubmit" type="submit" value="Save" class="btn btn-primary" />
+            <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
+                @if (Model.Results != null)
+                {
+                    @*<input hidden asp-for="UserId" name="UserId" />*@
+                    <input hidden asp-for="Spelling" name="Word" />
 
-            }
-            else
-            {
-                <span>No definition found</span>
-            }
-        </form>
-    </div>
+                    @Html.DisplayFor(m => Model.Results)
+                    @if (Model.IsSaved)
+                    {
+                        <input id="inputSubmit" type="submit" value="Remove from List" class="btn btn-success" />
+                    }
+                    else
+                    {
+                        <input id="inputSubmit" type="submit" value="Save to List" class="btn btn-primary" />
+                    }
+
+                }
+                else
+                {
+                    <span>No definition found</span>
+                }
+            </form>
+        </div>
 }
     
     
 
     @section Scripts {
-     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
-               <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<!-- Javascript -->
-      <script type="text/javascript">
-          
-
-          $(function(){
-            $("#word").autocomplete({
-                source: function (request, response) {
+        <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <!-- Javascript -->
+        <script type="text/javascript">
+            jQueryAjaxPost = form => {
+                try {
                     $.ajax({
-                        url: "/Home/StringSearch/?searchString=" + request.term,
-                        method: 'get',
-                        success: function (data) {
-                            //alert(data);
+                        type: "POST",
+                        url: form.action,
+                        data: new FormData(form),
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.isValid) {
 
-                            var obj = $.parseJSON(data);
-                            response(obj.results.data);
+                            }
+                            else {
+
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
                         }
                     });
-                },
-                minLength: 3,
-                error: function (message) {
-                    alert(message);
-                },
-                autoFocus:true
-           });
-        });
-           //  $("#word").autocomplete({  
-           //      source: "/Home/StringSearch/?searchString=a",
-           //      autoFocus: true,
-           //      select: function (event, ui) {
-           //         //Tags for display              
-           //         this.value = ui.item.value;
-           //         return false;
-           //     }
-           //})
-       //});  
-         //   var availableTutorials = [
-         //      "ActionScript",
-         //      "Bootstrap",
-         //      "C",
-         //      "C++",
-         //   ];
-         //   $( "#word" ).autocomplete({
-         //      source: availableTutorials,
-         //      autoFocus:true
-         //   });
-         //});
-      </script>
+                } catch (e) {
+                    console.log(e);
+                }
+
+                // to prevent form submit event
+                return false;
+            }
+
+            $(function(){
+                $("#word").autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: "/Home/StringSearch/?searchString=" + request.term,
+                            method: 'get',
+                            success: function (data) {
+                                //alert(data);
+
+                                var obj = $.parseJSON(data);
+                                response(obj.results.data);
+                            }
+                        });
+                    },
+                    minLength: 3,
+                    error: function (message) {
+                        alert(message);
+                    },
+                    autoFocus:true
+                });
+            });
+
+        </script>
 }

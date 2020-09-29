@@ -9,6 +9,7 @@ using MyDictionary.Core.Domain;
 using MyDictionary.Infrastructure.Interfaces;
 using MyDictionary.Infrastructure.Repositories;
 using MyDictionary.Infrastructure.Respositories;
+using MyDictionary.Infrastructure.Services;
 
 namespace MyDictionary
 {
@@ -86,8 +87,13 @@ namespace MyDictionary
                     options.ClientSecret = "_Z11GsRMjSNW4uKGt_6tHKKW";
                 });
 
-            services.AddSingleton<IWordLookupRepository>(s => new WordLookupRespository("MyConnectionString"));
-            services.AddSingleton<IUserWordRepository>(s => new UserWordRepository(Configuration.GetConnectionString("UserWordConnection")));
+           
+            services.AddSingleton<IWordLookupRepository>(s => new RapidApiRepository(
+                Configuration.GetValue<string>("WordsApi:Uri")
+                , Configuration.GetValue<string>("WordsApi:Host")
+                , Configuration.GetValue<string>("WordsApi:Key")));
+            services.AddSingleton<IUserWordService, UserWordService>();
+            services.AddSingleton<IUserWordRepository>(s => new SqlUserWordRepository(Configuration.GetConnectionString("UserWordConnection")));
             //services.AddRazorPages();
 
            

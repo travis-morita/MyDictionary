@@ -1,11 +1,12 @@
 ﻿using MyDictionary.Core.Domain;
+using System.Collections.Generic;
 
 namespace MyDictionary.Infrastructure.Interfaces
 {
     public interface IUserWordRepository : IRepository<UserWord>
     {
-        UserWord GetUserWord(UserWord userWord);
+        int GetUserWordId(string userId, string word);
 
-        int Create(UserWord userWord);
+        IEnumerable<UserWord> GetWordsByUserId(string userid);
     }
 }
