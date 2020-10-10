@@ -28,10 +28,20 @@ namespace MyDictionary.Infrastructure.Services
                 throw new ArgumentException("userId cannot be empty");
             }
 
-            ApiWord wordResult = _wordLookupRepo.GetWord(word);
-            wordResult.Saved = _userWordRepo.GetUserWordId(userId, word) == 0 ? false : true;
+            try
+            {
+                ApiWord wordResult = _wordLookupRepo.GetWord(word);
+                wordResult.Saved = _userWordRepo.GetUserWordId(userId, word) == 0 ? false : true;
 
-            return wordResult;
+                return wordResult;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return null;
+            
         }
 
         public IEnumerable<UserWord> GetWordsByUserId(string userId)

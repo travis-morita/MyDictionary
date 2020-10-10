@@ -49,12 +49,10 @@ namespace MyDictionary.Web.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             [BindProperty]
-            [Remote(
-                "IsEmailInUse", 
-                "Regsiter",
-                "Register",
-                HttpMethod = "get",
-                ErrorMessage = "Email already taken")]
+            //[PageRemote(
+            //    PageHandler = "IsEmailInUse", 
+            //    HttpMethod = "get",
+            //    ErrorMessage = "Email already taken")]
             public string Email { get; set; }
 
             [Required]

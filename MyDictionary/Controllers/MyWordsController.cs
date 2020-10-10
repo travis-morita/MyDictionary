@@ -40,7 +40,7 @@ namespace MyDictionary.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string word)
+        public IActionResult DeleteWord(string id)
         {
             if (ModelState.IsValid)
             {
@@ -48,15 +48,15 @@ namespace MyDictionary.Web.Controllers
                     new UserWord
                     {
                         UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                        Spelling = word
+                        Spelling = id
                     });
             }
 
-            return RedirectToAction("LookupWord", "Home", new { word = word });
+            return RedirectToAction("GetWords");
         }
 
         [HttpGet]
-        public IActionResult GetMyWords()
+        public IActionResult GetWords()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             List<UserWord> userWords = _userWordService.GetWordsByUserId(userId).ToList();

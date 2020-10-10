@@ -49,11 +49,16 @@ namespace MyDictionary.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var wordLookup = _userWordService.GetWord(word, userId);
-            var lookupWordViewModel = wordLookup.ToLookupWordViewModel();
-            lookupWordViewModel.Results = wordLookup?.WordDetails?.ToResultViewModelList();
-            lookupWordViewModel.UserId = userId;
-            lookupWordViewModel.IsSaved = wordLookup.Saved;
+            LookupWordViewModel lookupWordViewModel = null;
 
+            if (wordLookup != null)
+            {
+                lookupWordViewModel = wordLookup.ToLookupWordViewModel();
+                lookupWordViewModel.Results = wordLookup?.WordDetails?.ToResultViewModelList();
+                lookupWordViewModel.UserId = userId;
+                lookupWordViewModel.IsSaved = wordLookup.Saved;
+            }
+           
             return View("Index", lookupWordViewModel);
         }
 

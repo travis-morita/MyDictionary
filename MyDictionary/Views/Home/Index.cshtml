@@ -47,60 +47,26 @@
     
     
 
-    @section Scripts {
-        <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <!-- Javascript -->
-        <script type="text/javascript">
-            jQueryAjaxPost = form => {
-                try {
+@section Scripts {
+    <script type="text/javascript">
+        $(function(){
+            $("#word").autocomplete({
+                source: function (request, response) {
                     $.ajax({
-                        type: "POST",
-                        url: form.action,
-                        data: new FormData(form),
-                        contentType: false,
-                        processData: false,
-                        success: function (res) {
-                            if (res.isValid) {
-
-                            }
-                            else {
-
-                            }
-                        },
-                        error: function (err) {
-                            console.log(err);
+                        url: "/Home/StringSearch/?searchString=" + request.term,
+                        method: 'get',
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            response(obj.results.data);
                         }
                     });
-                } catch (e) {
-                    console.log(e);
-                }
-
-                // to prevent form submit event
-                return false;
-            }
-
-            $(function(){
-                $("#word").autocomplete({
-                    source: function (request, response) {
-                        $.ajax({
-                            url: "/Home/StringSearch/?searchString=" + request.term,
-                            method: 'get',
-                            success: function (data) {
-                                //alert(data);
-
-                                var obj = $.parseJSON(data);
-                                response(obj.results.data);
-                            }
-                        });
-                    },
-                    minLength: 3,
-                    error: function (message) {
-                        alert(message);
-                    },
-                    autoFocus:true
-                });
+                },
+                minLength: 3,
+                error: function (message) {
+                    alert(message);
+                },
+                autoFocus:true
             });
-
-        </script>
+        });
+    </script>
 }

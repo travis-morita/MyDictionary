@@ -5,30 +5,74 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>View</h1>
+<h1>My Words</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Spelling)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-controller="Home" asp-action="LookupWord" 
-                   asp-route-word="@item.Spelling">@item.Spelling</a>
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { Spelling = item.Spelling })
-            </td>
-        </tr>
+<div class="row">
+    <div class="col-sm-4">
+        <form id="form-delete" method="post" asp-controller="MyWords" asp-action="DeleteWord">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Spelling)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Home" asp-action="LookupWord"
+                                   asp-route-word="@item.Spelling">@item.Spelling</a>
+                            </td>
+                            <td>
+                                @*@Html.ActionLink("Delete", "Delete", new { Spelling = item.Spelling })*@
+                                <button id="@item.Spelling" type="button" value="Delete" class="btn delete-word" data-target="#confirm-delete" data-toggle="modal">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to remove this word from your list?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button id="confirm" type="button" class="btn btn-danger btn-ok">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('.delete-word').click(function () {
+                var btnId = this.id;
+               // $('#form-delete').attr('asp-route-id', this.id);
+                $('#form-delete').attr('action', function(i, value) {
+                    return value + "/" + btnId;
+                });
+            });
+ 
+            $('#confirm').click(function (e) {
+                /* when the submit button in the modal is clicked, submit the form */
+                $('#form-delete').submit();
+            });
+        });
+            
+        
+    </script>
 }
-    </tbody>
-</table>
