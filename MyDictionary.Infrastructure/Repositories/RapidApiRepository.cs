@@ -50,7 +50,7 @@ namespace MyDictionary.Infrastructure.Respositories
             throw new System.Exception(response.ReasonPhrase);
         }
 
-        public ApiWord GetWord(string word)
+        public ReturnWord GetWord(string word)
         {
             if (String.IsNullOrWhiteSpace(word))
             {
@@ -73,11 +73,13 @@ namespace MyDictionary.Infrastructure.Respositories
 
                     var objData = (JObject)JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result); // Deserialize json data
 
-                    var apiWord = new ApiWord();
-                    apiWord.Spelling = objData.Value<string>("word");
-                    apiWord.WordDetails = objData.Value<JArray>("results")?.ToObject<List<WordDetails>>();
-                    apiWord.Syllables = objData.Value<JToken>("syllables")?.ToObject<Syllables>();
-                    apiWord.Pronunciation = objData.Value<JToken>("pronunciation")?.ToObject<Pronunciation>();
+                    var apiWord = new ReturnWord
+                    {
+                        Spelling = objData.Value<string>("word"),
+                        WordDetails = objData.Value<JArray>("results")?.ToObject<List<WordDetails>>(),
+                        Syllables = objData.Value<JToken>("syllables")?.ToObject<Syllables>()
+                    };
+                    //apiWord.Pronunciation = objData.Value<JToken>("pronunciation")?.ToObject<Pronunciation>();
                     return apiWord;
                 }
 

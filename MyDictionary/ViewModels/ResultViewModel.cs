@@ -10,5 +10,6 @@ namespace MyDictionary.Web.ViewModels
         public string Definition { get; set; }
         public List<string> Synonyms { get; set; }
         public bool IsSaved { get; set; }
+        public int Number { get; set; }
     }
 }

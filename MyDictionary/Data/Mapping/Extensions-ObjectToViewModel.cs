@@ -8,9 +8,9 @@ namespace MyDictionary.Web.Data.Mapping
 {
     public static class Extensions_ObjectToViewModel
     {
-        public static LookupWordViewModel ToLookupWordViewModel(this ApiWord wordLookup)
+        public static LookupWordViewModel ToLookupWordViewModel(this ReturnWord wordLookup)
         {
-            return new LookupWordViewModel(wordLookup.Spelling, wordLookup.Syllables, wordLookup.Pronunciation);
+            return new LookupWordViewModel(wordLookup.Spelling, wordLookup.Syllables, new Pronunciation()); //wordLookup.Pronunciation);
         }
 
         public static List<ResultViewModel> ToResultViewModelList(this IList<WordDetails> results)

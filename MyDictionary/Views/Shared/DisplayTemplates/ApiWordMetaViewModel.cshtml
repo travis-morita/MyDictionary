@@ -1,0 +1,68 @@
+﻿@model MyDictionary.Web.ViewModels.ApiWordMetaViewModel
+
+@if (Model != null)
+{
+    <div class="col-md-12">
+
+        <h3>
+            @Model.WordDisplay <span class="font-italic" style="font-size: .6em">@Model.PartOfSpeech</span>
+        </h3>
+
+        <span style="color: #70757A; line-height: 16px; font-size: 14px">
+            @Model.Syllables @if (!String.IsNullOrWhiteSpace(Model.Pronunciation)) { <span>| @Model.Pronunciation</span> } 
+        </span>
+
+    </div>
+    <div class="col-md-12">
+        <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
+            
+            <input hidden asp-for="WordDisplay" name="Word" />
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <span style="font-style: italic;">
+                        <input hidden asp-for="PartOfSpeech" />
+                        @Model?.PartOfSpeech
+                    </span>
+                </div>
+                <div class="col-md-12 ml-2 ">
+                    @if (Model != null)
+                    {
+                        @*<input hidden asp-for="Definition" />*@
+                        <ol>
+                            @foreach(var definition in Model.Definitions)
+                            {
+                            <li>@definition</li>
+                            }
+                        </ol>
+                        
+
+                        @if (Model.Synonyms != null)
+                        {
+                            <span style="color: #188038;">Similar: </span>
+
+                            /*cant use foreach and need to have individual hidden fields in order to model bind properly*/
+                            @for (int i = 0; i < Model.Synonyms?.Count; i++)
+                            {
+                                <span class="pr-3">
+                                    <a asp-controller="Home"
+                                        asp-action="LookupWord"
+                                        asp-route-word="@Model.Synonyms[i]">@Model.Synonyms[i]</a>
+                                </span>
+                            }
+                        }
+
+                    }
+                </div>
+            </div>
+            
+
+
+        </form>
+    </div>
+
+}
+else
+{
+    <span>No definition found</span>
+}

@@ -6,25 +6,38 @@
     <h1 class="display-4">My Dictionary</h1>
 </div>
 <partial name="/Views/Shared/_Search.cshtml">
-@if(Model != null)
-{
-    <div class="col-md-12">
+    @if (Model != null)
+    {
+        <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
 
-    <h3>
-        @Model.WordDisplay
-    </h3>
-       
-    <span style="color: #70757A; line-height: 16px; font-size: 14px">
-    @Model.Pronunciation
-    </span>
-        
-    </div>
-    <div class="col-md-12">
-            <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
+            <div class="col-md-12">
+
+                <h3>
+                    @Model.WordDisplay
+                </h3>
+                @if (Model.IsSaved)
+                {
+                    <button id="inputSubmit" type="submit">
+                        <i class="fa fa-bookmark" aria-hidden="true"></i>
+                    </button>
+                }
+                else
+                {
+                    <button id="inputSubmit" type="submit">
+                        <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                    </button>
+                }
+
+                <span style="color: #70757A; line-height: 16px; font-size: 14px">
+                    @Model.Syllables | @Model.Pronunciation
+                </span>
+
+            </div>
+            <div class="col-md-12">
                 @if (Model.Results != null)
                 {
                     @*<input hidden asp-for="UserId" name="UserId" />*@
-                    <input hidden asp-for="Spelling" name="Word" />
+                    <input hidden asp-for="WordDisplay" name="Word" />
 
                     @Html.DisplayFor(m => Model.Results)
                     @if (Model.IsSaved)
@@ -41,32 +54,42 @@
                 {
                     <span>No definition found</span>
                 }
-            </form>
-        </div>
-}
-    
-    
+            </div>
+        </form>
 
-@section Scripts {
-    <script type="text/javascript">
-        $(function(){
-            $("#word").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "/Home/StringSearch/?searchString=" + request.term,
-                        method: 'get',
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            response(obj.results.data);
-                        }
-                    });
-                },
-                minLength: 3,
-                error: function (message) {
-                    alert(message);
-                },
-                autoFocus:true
+    }
+
+
+
+    @section Scripts {
+        <script type="text/javascript">
+            $(function () {
+                $("#word").autocomplete({
+
+                    source: function (request, response) {
+                        $.ajax({
+                            async: true,
+                            crossDomain: true,
+                            url: "https://api.datamuse.com/words?sp=" + request.term + "*",
+                            method: 'get',
+                            success: function (obj) {
+                                var words = [];
+                                obj.forEach(w => {
+                                    words.push(w.word);
+                                });
+                                response(words);
+                                //var obj = JSON.parse(data);
+                                //response(obj.results.data);
+                            }
+                        });
+                    },
+                    minLength: 3,
+                    error: function (message) {
+                        alert(message);
+                    },
+                    autoFocus: true
+                });
             });
-        });
-    </script>
-}
+
+        </script>
+    }

@@ -35,8 +35,9 @@ namespace MyDictionary.Web.ViewModels
 
         public string UserId { get; set; }
         public string Spelling { get => _spelling; set { _spelling = value; } }
-        public string WordDisplay { get => _syllableDisplay ?? _wordDisplay; }
-        public string Pronunciation { get => _pronunciation; }
+        public string Syllables { get; set; }
+        public string WordDisplay { get => _syllableDisplay ?? _wordDisplay; set { _wordDisplay = value; } }
+        public string Pronunciation { get => _pronunciation; set { _pronunciation = value; } }
         public List<ResultViewModel> Results { get; set; }
         public string[] Synonyms { get; set; }
         public bool IsSaved { get; set; }

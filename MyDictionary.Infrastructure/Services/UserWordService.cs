@@ -1,4 +1,5 @@
 ﻿using MyDictionary.Core.Domain;
+using MyDictionary.Core.Domain.Interfaces;
 using MyDictionary.Infrastructure.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,16 @@ namespace MyDictionary.Infrastructure.Services
     {
         private IUserWordRepository _userWordRepo;
         private IWordLookupRepository _wordLookupRepo;
+        private IWordRepository _wordRepository;
 
-        public UserWordService(IUserWordRepository userWordRepo, IWordLookupRepository wordLookupRepo)
+        public UserWordService(IUserWordRepository userWordRepo, IWordLookupRepository wordLookupRepo, IWordRepository wordRepository)
         {
             _userWordRepo = userWordRepo;
             _wordLookupRepo = wordLookupRepo;
+            _wordRepository = wordRepository;
         }
 
-        public ApiWord GetWord(string word, string userId)
+        public MyWord GetWord(string word, string userId)
         {
             if (String.IsNullOrWhiteSpace(word))
             {
@@ -28,19 +31,18 @@ namespace MyDictionary.Infrastructure.Services
                 throw new ArgumentException("userId cannot be empty");
             }
 
-            try
-            {
-                ApiWord wordResult = _wordLookupRepo.GetWord(word);
-                wordResult.Saved = _userWordRepo.GetUserWordId(userId, word) == 0 ? false : true;
+            var myWord = new MyWord();
 
-                return wordResult;
-            }
-            catch (Exception ex)
-            {
+            myWord.Word = _wordRepository.GetWord(word);
 
-            }
+            // rapid api call - depricated
+            //ReturnWord wordResult = _wordLookupRepo.GetWord(word);
+            //apiWord.Saved = _userWordRepo.GetUserWordId(userId, word) == 0 ? false : true;
+            myWord.IsSaved = _userWordRepo.GetUserWordId(userId, word) == 0 ? false : true; 
 
-            return null;
+            return myWord;
+
+
             
         }
 

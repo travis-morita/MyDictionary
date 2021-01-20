@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-sm-4">
-        <form id="form-delete" method="post" asp-controller="MyWords" asp-action="DeleteWord">
+        <form id="form-delete" method="post" asp-controller="MyWords" asp-action="DeleteFromList">
             <table class="table">
                 <thead>
                     <tr>
@@ -23,8 +23,9 @@
                     {
                         <tr>
                             <td>
-                                <a asp-controller="Home" asp-action="LookupWord"
-                                   asp-route-word="@item.Spelling">@item.Spelling</a>
+                                <a asp-controller="Home" asp-action="GetWord"
+                                asp-route-word="@item.Spelling" 
+                                data-poload="/Home/GetWordJson/@item.Spelling" data-toggle="popover">@item.Spelling</a>
                             </td>
                             <td>
                                 @*@Html.ActionLink("Delete", "Delete", new { Spelling = item.Spelling })*@
@@ -37,7 +38,8 @@
                 </tbody>
             </table>
         </form>
-
+        <a href="#" id="qoo" rel="popover" class="circle"> Click to popover</a>
+        <!-- Delete Confirmation -->
         <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -70,7 +72,39 @@
             $('#confirm').click(function (e) {
                 /* when the submit button in the modal is clicked, submit the form */
                 $('#form-delete').submit();
+            });       
+
+
+            $('*[data-poload]').hover(function() {
+                var e = $(this);
+                e.off('hover');
+                $.get(e.data('poload'), function(d) {
+                    e.popover({
+                        content: function () {
+                            var definitionbody = "<ol>";
+
+                            d[0].definitions.forEach(x => { definitionbody += "<li>" + x + "</li>" });
+                            definitionbody += "</ol>";
+
+                            return definitionbody;
+                        },
+                        title: d[0].partOfSpeech,
+                        template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
+                        html: true
+                    }).popover('show');
+                });
             });
+
+            $('body').on('click', function (e) {
+                $('[data-toggle=popover]').each(function () {
+                    // hide any open popovers when the anywhere else in the body is clicked
+                    if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                        $(this).popover('hide');
+                    }
+                });
+
+            });
+
         });
             
         

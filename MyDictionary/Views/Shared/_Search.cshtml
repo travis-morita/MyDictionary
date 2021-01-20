@@ -1,17 +1,21 @@
 ﻿<div class="form-group">
     <div class="col-md-4">
-        <form asp-controller="Home" asp-action="LookupWord" method="get">
+        @*<form asp-controller="Home" asp-action="LookupWord" method="get">*@
+        <form asp-controller="Home" asp-action="GetWord" method="get">
             <div role="heading"><div class="mb-3">What word do you want to look up?</div></div>
             <div class="input-group mb-3">
-              <input type="search" id="word" name="word" placeholder="Search for a word" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
-              <span class="input-group-btn">
+                <input type="search" id="word" name="word" placeholder="Search for a word" class="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <span class="input-group-btn">
                     <button class="btn btn-primary" type="submit">
                         <span class="fa fa-search"></span>
                     </button>
                 </span>
             </div>
         </form>
-    </div> 
+    </div>
 </div>
+
+
+
 
 

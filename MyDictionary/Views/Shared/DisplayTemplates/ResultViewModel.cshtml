@@ -12,7 +12,7 @@
         @if (Model != null)
         {
             <input hidden asp-for="Definition" />
-            @Model.Definition<br />
+            @(string.Format($"{Model.Number} {Model.Definition}"))<br />
 
             @if (Model.Synonyms != null)
             {

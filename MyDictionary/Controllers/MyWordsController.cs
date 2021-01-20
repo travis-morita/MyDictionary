@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Core.Domain;
@@ -9,6 +10,7 @@ using MyDictionary.Web.ViewModels;
 
 namespace MyDictionary.Web.Controllers
 {
+   
     public class MyWordsController : BaseController
     {
         private readonly ILogger<MyWordsController> _logger;
@@ -24,23 +26,39 @@ namespace MyDictionary.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult Add(MyWordViewModel model)
+        public IActionResult Add(string word)
         {
             if (ModelState.IsValid)
             {
-                int userWordId = _userWordRepository.Create(
+                _userWordRepository.Create(
                     new UserWord
                     {
                         UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                        Spelling = model.Word
+                        Spelling = word
                     });
             }
 
-            return RedirectToAction("LookupWord", "Home", new { word = model.Word });
+            return RedirectToAction("GetWord", "Home", new { word });
         }
 
         [HttpPost]
-        public IActionResult DeleteWord(string id)
+        public IActionResult Delete(string word)
+        {
+            if (ModelState.IsValid)
+            {
+                _userWordRepository.Delete(
+                    new UserWord
+                    {
+                        UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                        Spelling = word
+                    });
+            }
+
+            return RedirectToAction("GetWord", new { word });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteFromList(string id)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +80,24 @@ namespace MyDictionary.Web.Controllers
             List<UserWord> userWords = _userWordService.GetWordsByUserId(userId).ToList();
 
             return View("MyWords", userWords);
+        }
+
+        //[HttpGet]
+        //public IActionResult GetWordsJson()
+        //{
+        //    //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    List<UserWord> userWords = _userWordService.GetWordsByUserId("0603f9ea-0223-49b8-9a2b-9ae52de89521").ToList();
+
+        //    return new JsonResult(userWords);
+        //}
+
+        [HttpGet]
+        public IActionResult GetWordsJson(string id)
+        {
+            //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<UserWord> userWords = _userWordService.GetWordsByUserId(id).ToList();
+
+            return new JsonResult(userWords);
         }
 
         [HttpPost]
