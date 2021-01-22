@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyDictionary.Infrastructure.Repositories;
 using MyDictionary.Infrastructure.Interfaces;
-using MyDictionary.Infrastructure.Services;
 using MyDictionary.Infrastructure.Respositories;
 
 namespace MyDictionary.UI
@@ -63,7 +62,6 @@ namespace MyDictionary.UI
                 , Configuration.GetValue<string>("WordsApi:Key")));
             services.AddSingleton<IWordRepository>(s => new MerriamWebsterDictionaryRepository(Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Uri")
                 , Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Key")));
-            services.AddSingleton<IUserWordService, UserWordService>();
             services.AddSingleton<IUserWordRepository>(s => new SqlUserWordRepository(Configuration.GetConnectionString("UserWordConnection")));
 
         }

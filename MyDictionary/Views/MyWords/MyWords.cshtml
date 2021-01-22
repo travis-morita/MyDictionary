@@ -78,17 +78,18 @@
             $('*[data-poload]').hover(function() {
                 var e = $(this);
                 e.off('hover');
-                $.get(e.data('poload'), function(d) {
+                $.get(e.data('poload'), function (d) {
+                    hidePopovers(e);
                     e.popover({
                         content: function () {
                             var definitionbody = "<ol>";
 
-                            d[0].definitions.forEach(x => { definitionbody += "<li>" + x + "</li>" });
+                            d.results[0].definitions.forEach(x => { definitionbody += "<li>" + x + "</li>" });
                             definitionbody += "</ol>";
 
                             return definitionbody;
                         },
-                        title: d[0].partOfSpeech,
+                        title: d.results[0].partOfSpeech,
                         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
                         html: true
                     }).popover('show');
@@ -96,14 +97,18 @@
             });
 
             $('body').on('click', function (e) {
+                hidePopovers(e);
+            });
+
+
+            // hide any open popovers 
+            var hidePopovers = (e) => {
                 $('[data-toggle=popover]').each(function () {
-                    // hide any open popovers when the anywhere else in the body is clicked
                     if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
                         $(this).popover('hide');
                     }
                 });
-
-            });
+            };
 
         });
             

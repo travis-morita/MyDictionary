@@ -9,6 +9,6 @@ namespace MyDictionary.Core.Domain.Interfaces
         string Syllables { get; set; }
         string PartOfSpeech { get; set; }
         IEnumerable<string> Definitions { get; set; }
-        IEnumerable<IPronunciation> Pronunciations { get; set; }
+        IEnumerable<string> Pronunciations { get; set; }
     }
 }

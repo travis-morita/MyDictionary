@@ -15,11 +15,9 @@ namespace MyDictionary.Web.Controllers
     {
         private readonly ILogger<MyWordsController> _logger;
         private readonly IUserWordRepository _userWordRepository;
-        private readonly IUserWordService _userWordService;
 
-        public MyWordsController(IUserWordService userWordService, IWordLookupRepository repository, IUserWordRepository userWordRepository, ILogger<MyWordsController> logger)
+        public MyWordsController(IUserWordRepository userWordRepository, ILogger<MyWordsController> logger)
         {
-            _userWordService = userWordService;
             _userWordRepository = userWordRepository;
             _logger = logger;
         }
@@ -77,7 +75,7 @@ namespace MyDictionary.Web.Controllers
         public IActionResult GetWords()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<UserWord> userWords = _userWordService.GetWordsByUserId(userId).ToList();
+            List<UserWord> userWords = _userWordRepository.GetWordsByUserId(userId).ToList();
 
             return View("MyWords", userWords);
         }
@@ -95,7 +93,7 @@ namespace MyDictionary.Web.Controllers
         public IActionResult GetWordsJson(string id)
         {
             //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<UserWord> userWords = _userWordService.GetWordsByUserId(id).ToList();
+            List<UserWord> userWords = _userWordRepository.GetWordsByUserId(id).ToList();
 
             return new JsonResult(userWords);
         }

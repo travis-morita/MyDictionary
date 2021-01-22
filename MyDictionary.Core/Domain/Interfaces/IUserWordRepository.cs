@@ -8,5 +8,6 @@ namespace MyDictionary.Infrastructure.Interfaces
         int GetUserWordId(string userId, string word);
 
         IEnumerable<UserWord> GetWordsByUserId(string userid);
+
     }
 }

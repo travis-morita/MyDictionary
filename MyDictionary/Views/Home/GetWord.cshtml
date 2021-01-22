@@ -12,11 +12,12 @@
 
         @if (Model != null)
         {
+
             <div class="col-md-12">
                 <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
                     <input hidden asp-for="@Model.ApiWordMeta.First().WordDisplay" name="Word" />
                     <h3>
-                        @Model.ApiWordMeta.First().WordDisplay <span class="font-italic " style="font-size: .6em">@Model.ApiWordMeta.First().PartOfSpeech</span>
+                        @Model.ApiWordMeta.First().WordDisplay @*<span class="font-italic " style="font-size: .6em">@Model.ApiWordMeta.First().PartOfSpeech</span>*@
                     </h3>
 
                     @if (Model.IsSaved)
@@ -33,54 +34,56 @@
                     }
                 </form>
                 <span style="color: #70757A; line-height: 16px; font-size: 14px">
-                    @Model.ApiWordMeta.First().Syllables | @Model.ApiWordMeta.First().Pronunciation
+                    @*@@Model.ApiWordMeta.First().Syllables |
+                    foreach (var meta in Model.ApiWordMeta)
+                    {
+                        <span>@meta.Pronunciations.ToList().First() \</span>
+                    }*@
                 </span>
 
             </div>
-            <div class="col-md-12">
+            @Html.DisplayFor(m => m.ApiWordMeta);
 
-                <div class="row mb-3">
-                    <div class="col-md-12">
-                        <span style="font-style: italic;">
-                            <input hidden asp-for="@Model.ApiWordMeta.First().PartOfSpeech" />
-                            @Model.ApiWordMeta.First().PartOfSpeech
-                        </span>
-                    </div>
-                    <div class="col-md-12 ml-2 ">
-                        @if (Model != null)
-                        {
-                            @*<input hidden asp-for="Definition" />*@
-                            <ol>
-                                @foreach (var definition in @Model.ApiWordMeta.First().Definitions)
-                                {
-                                    <li>@definition</li>
-                                }
-                            </ol>
+            @*<div class="col-md-12">
 
-
-                            @if (@Model.ApiWordMeta.First().Synonyms != null)
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <span style="font-style: italic;">
+                        <input hidden asp-for="@Model.ApiWordMeta.First().PartOfSpeech" />
+                        @Model.ApiWordMeta.First().PartOfSpeech
+                    </span>
+                </div>
+                <div class="col-md-12 ml-2 ">
+                    @if (Model != null)
+                    {
+                        <ol>
+                            @foreach (var definition in @Model.ApiWordMeta.First().Definitions)
                             {
-                                <span style="color: #188038;">Similar: </span>
-
-                                /*cant use foreach and need to have individual hidden fields in order to model bind properly*/
-                                @for (int i = 0; i < Model.ApiWordMeta.First().Synonyms?.Count; i++)
-                                {
-                                    <span class="pr-3">
-                                        <a asp-controller="Home"
-                                           asp-action="LookupWord"
-                                           asp-route-word="@Model.ApiWordMeta.First().Synonyms[i]">@Model.ApiWordMeta.First().Synonyms[i]</a>
-                                    </span>
-                                }
+                                <li>@definition</li>
                             }
+                        </ol>
 
+
+                        @if (@Model.ApiWordMeta.First().Synonyms != null)
+                        {
+                            <span style="color: #188038;">Similar: </span>
+
+                            /*cant use foreach and need to have individual hidden fields in order to model bind properly*/
+                            @for (int i = 0; i < Model.ApiWordMeta.First().Synonyms?.Count; i++)
+                            {
+                                <span class="pr-3">
+                                    <a asp-controller="Home"
+                                       asp-action="LookupWord"
+                                       asp-route-word="@Model.ApiWordMeta.First().Synonyms[i]">@Model.ApiWordMeta.First().Synonyms[i]</a>
+                                </span>
+                            }
                         }
-                    </div>
+
+                    }
                 </div>
             </div>
+            </div>*@
 
-            IEnumerable<MyDictionary.Web.ViewModels.ApiWordMetaViewModel> test = Model.ApiWordMeta.Skip(1);
-
-            Html.DisplayFor(m => test);
         }
         else
         {
@@ -94,4 +97,4 @@
 
 
 
-                
+

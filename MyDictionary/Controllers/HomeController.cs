@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Infrastructure.Interfaces;
 using MyDictionary.Models;
-using MyDictionary.Web.Data.Mapping;
 using MyDictionary.Web.ViewModels;
 
 namespace MyDictionary.Controllers
@@ -20,12 +17,10 @@ namespace MyDictionary.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUserWordRepository _userWordRepository;
-        private readonly IUserWordService _userWordService;
-        private readonly IWordRepository _wordRepository;
+        private readonly IApiWordRepository _wordRepository;
 
-        public HomeController(IUserWordService userWordService, IUserWordRepository userWordRepository, IWordRepository wordRepository, ILogger<HomeController> logger)
+        public HomeController(IUserWordRepository userWordRepository, IApiWordRepository wordRepository, ILogger<HomeController> logger)
         {
-            _userWordService = userWordService;
             _userWordRepository = userWordRepository;
             _wordRepository = wordRepository;
             _logger = logger;
@@ -34,8 +29,6 @@ namespace MyDictionary.Controllers
         
         public IActionResult Index()
         {
-            var uid = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var test = _userWordRepository.GetUserWordId(uid, "word");
             return View();
         }
 
@@ -44,53 +37,38 @@ namespace MyDictionary.Controllers
             return View();
         }
 
-        //[HttpGet]
-        //public IActionResult LookupWord(string word)
-        //{
-        //    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        //    var wordLookup = _userWordService.GetWord(word, userId);
-        //    LookupWordViewModel lookupWordViewModel = null;
-
-        //    if (wordLookup != null)
-        //    {
-        //        lookupWordViewModel = wordLookup.ToLookupWordViewModel();
-        //        lookupWordViewModel.Results = wordLookup?.WordDetails?.ToResultViewModelList();
-        //        lookupWordViewModel.UserId = userId;
-        //        lookupWordViewModel.IsSaved = wordLookup.Saved;
-        //    }
-
-
-        //    return View("Index", lookupWordViewModel);
-        //}
-
         [HttpGet]
         public IActionResult GetWord(string word)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var wordResults = _userWordService.GetWord(word, userId);
+            var wordApiResult = _wordRepository.GetWord(word);
             
-            if (wordResults == null)
+            if (wordApiResult == null)
             {
                 return View();
             }
 
+            if (!string.IsNullOrEmpty(wordApiResult.Error))
+            {
+                return View(new ApiWordViewModel { ApiError = wordApiResult.Error });
+            }
+
             var apiWordViewModel = new ApiWordViewModel
             {
-                ApiWordMeta = wordResults.Word.Select(w => new ApiWordMetaViewModel
+                ApiWordMeta = wordApiResult.Results.Select(w => new ApiWordMetaViewModel
                 {
                     Spelling = w.Id,
                     PartOfSpeech = w.PartOfSpeech,
                     Syllables = w.Syllables,
-                    WordDisplay = (w.Id.IndexOf(":") > 0 ? w.Id.Substring(0, w.Id.IndexOf(":")) : w.Id),
+                    WordDisplay = w.Id, //(w.Id.IndexOf(":") > 0 ? w.Id.Substring(0, w.Id.IndexOf(":")) : w.Id),
                     Definitions = w.Definitions,
-                    Pronunciation = w.Pronunciations?.ToList()[0].Text
-                }).Where(w => w.WordDisplay == word),
+                    Pronunciations = w.Pronunciations
+                }).Where(w => w.WordDisplay.ToLower() == word.ToLower()),
                 IsSaved = _userWordRepository.GetUserWordId(userId, word) == 0 ? false : true
             };
 
-            return View(apiWordViewModel);
+            return View("Index", apiWordViewModel);
         }
 
         [AllowAnonymous]
@@ -98,20 +76,20 @@ namespace MyDictionary.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var apiWordMeta = _userWordService.GetWord(id, userId);
+            var apiWordMeta = _wordRepository.GetWord(id);
             //var apiWordMeta = _userWordService.GetWord(id, "463a14b7-de25-48e0-8705-fbaac83134e8");
 
             var apiWordViewModel = new ApiWordViewModel
             {
-                ApiWordMeta = apiWordMeta.Word.Select(w => new ApiWordMetaViewModel
+                ApiWordMeta = apiWordMeta.Results.Select(w => new ApiWordMetaViewModel
                 {
                     Spelling = w.Id,
                     PartOfSpeech = w.PartOfSpeech,
                     Syllables = w.Syllables,
                     WordDisplay = w.Id, // (w.Id.IndexOf(":") > 0 ? w.Id.Substring(0, w.Id.IndexOf(":")) : w.Id),
                     Definitions = w.Definitions,
-                    Pronunciation = w.Pronunciations?.ToList()[0].Text
-                }), //.Where(w => w.WordDisplay == id),
+                    Pronunciations = w.Pronunciations
+                }).Where(w => w.WordDisplay.ToLower() == id.ToLower()),
                 IsSaved = _userWordRepository.GetUserWordId(userId, id) == 0 ? false : true
             };
 

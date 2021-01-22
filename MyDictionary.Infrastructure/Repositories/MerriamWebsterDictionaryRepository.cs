@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MyDictionary.Infrastructure.Repositories
 {
-    public class MerriamWebsterDictionaryRepository : IWordRepository
+    public class MerriamWebsterDictionaryRepository : IApiWordRepository
     {
         private string _uri;
         private string _key;
@@ -29,14 +29,12 @@ namespace MyDictionary.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IWord> GetWord(string word)
+        public IApiWordResult GetWord(string word)
         {
             if (String.IsNullOrWhiteSpace(word))
             {
                 throw new ArgumentException(nameof(word));
             }
-
-
 
             using (var client = new HttpClient())
             {
@@ -54,73 +52,44 @@ namespace MyDictionary.Infrastructure.Repositories
 
                         //var objData = (List<JObject>)JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result); // Deserialize json data
                         string strResponse = response.Content.ReadAsStringAsync().Result;
-                        var temp = JsonConvert.DeserializeObject(strResponse);
-                
-                        var objData = JsonConvert.DeserializeObject<List<MyArray>>(response.Content.ReadAsStringAsync().Result); // Deserialize json data
-                        //((Newtonsoft.Json.Linq.JArray)temp).ToList().Select(w => w.Meta)
+                        var objData = JsonConvert.DeserializeObject<List<RootObject>>(strResponse);
 
-                        var apiWordInfo = objData.Select(w =>
-                            new ApiWord
-                            {
-                                Id = (w.Meta.Id.IndexOf(":") > 0 ? w.Meta.Id.Substring(0, w.Meta.Id.IndexOf(":")) : w.Meta.Id),
-                                Syllables = w.Hwi.Hw,
-                                PartOfSpeech = w.Fl,
-                                Pronunciations = w.Hwi.Prs?.Select(p => new Pronunciation { Text = p.Mw }),
-                                Definitions = w.Shortdef
-                            }).Where(w => w.Id == word).ToList();
+                        var wordApiResult = new ApiWordResult
+                        {
+                            Results = objData.Select(w =>
+                                new ApiWord
+                                {
+                                    Id = w.Meta.Id,
+                                    Syllables = w.Hwi.Hw,
+                                    PartOfSpeech = w.Fl,
+                                    Pronunciations = w.Hwi.Prs?.Select(p => p?.Mw),
+                                    Definitions = w.ShortDef
+                                }).Where(w => w.Id.ToLower() == word.ToLower()).ToList()
+                        };
 
+                        //var objData = JsonConvert.DeserializeObject<List<MyArray>>(response.Content.ReadAsStringAsync().Result); // Deserialize json data
+                        ////((Newtonsoft.Json.Linq.JArray)temp).ToList().Select(w => w.Meta)
 
-                        //apiWord.WordDetails = objData.Select(d => new WordDetails { Definition = string.Join(",", d.Shortdef) }).ToList();
-                        ////apiWord.Spelling = objData[0].Value<string>("word");
-                        //apiWord.WordDetails = objData[0].Value<JArray>("results")?.ToObject<List<WordDetails>>();
-                        //apiWord.Syllables = objData[0].Value<JToken>("syllables")?.ToObject<Syllables>();
-                        //apiWord.Pronunciation = objData.Value<JToken>("pronunciation")?.ToObject<Pronunciation>();
-                        return apiWordInfo;
+                        //var wordApiResult = new ApiWordResult
+                        //{
+                        //    Results = objData.Select(w =>
+                        //        new ApiWord
+                        //        {
+                        //            Id = (w.Meta.Id.IndexOf(":") > 0 ? w.Meta.Id.Substring(0, w.Meta.Id.IndexOf(":")) : w.Meta.Id),
+                        //            Syllables = w.Hwi.Hw,
+                        //            PartOfSpeech = w.Fl,
+                        //            Pronunciations = w.Hwi.Prs?.Select(p => p?.Mw),
+                        //            Definitions = w.Shortdef
+                        //        }).Where(w => w.Id.ToLower() == word.ToLower()).ToList()
+                        //};
+
+                        return wordApiResult;
                     }
 
-                    throw new System.Exception(response.ReasonPhrase);
+                    return new ApiWordResult { Error = response.ReasonPhrase };
                 }
                 
             }
-        //    using (var client = new HttpClient())
-        //    {
-        //        //client.DefaultRequestHeaders.Accept.Clear();
-        //        //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-        //        using (var response = client.GetAsync($"{_uri}{word}?key={_key}"))
-        //        {
-                   
-        //            response.Wait();
-
-        //            var result = response.Result;
-        //            if (result.IsSuccessStatusCode)
-        //            {
-        //                //var wordLookup = JsonConvert.DeserializeObject<Word>(response.Content.ReadAsStringAsync().Result);
-
-        //                //var readTask = result.Content.ReadAsAsync<IList<StudentViewModel>>();
-        //                //readTask.Wait();
-
-        //                //students = readTask.Result;
-
-        //                var objData = JsonConvert.DeserializeObject<List<object>>(result.Content.ReadAsStringAsync().Result); // Deserialize json data
-
-        //                var apiWord = new ApiWord();
-        //                //apiWord.Spelling = objData.Value<string>("word");
-        //                //apiWord.WordDetails = objData.Value<JArray>("results")?.ToObject<List<WordDetails>>();
-        //                //apiWord.Syllables = objData.Value<JToken>("syllables")?.ToObject<Syllables>();
-        //                //apiWord.Pronunciation = objData.Value<JToken>("pronunciation")?.ToObject<Pronunciation>();
-        //                return apiWord;
-
-        //            }
-                    
-        //            //throw new System.Exception(response.Status);
-                    
-
-        //        }
-                
-        //    }
-
-        //    return null;
 
         }
 

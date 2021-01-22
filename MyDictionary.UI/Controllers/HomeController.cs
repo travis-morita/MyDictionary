@@ -12,12 +12,10 @@ namespace MyDictionary.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUserWordService _userWordService;
         private readonly IUserWordRepository _userWordRepository;
 
-        public HomeController(IUserWordService userWordService, IUserWordRepository userWordRepository, ILogger<HomeController> logger)
+        public HomeController(IUserWordRepository userWordRepository, ILogger<HomeController> logger)
         {
-            _userWordService = userWordService;
             _userWordRepository = userWordRepository;
             _logger = logger;
         }
@@ -27,12 +25,12 @@ namespace MyDictionary.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var apiWordMeta = _userWordService.GetWord(id, userId);
+            //var apiWordMeta = __userWordService.GetWord(id, userId);
             //var apiWordMeta = _userWordService.GetWord(id, "463a14b7-de25-48e0-8705-fbaac83134e8");
 
    
 
-            return new JsonResult(apiWordMeta);
+            return new JsonResult("");
         }
 
 

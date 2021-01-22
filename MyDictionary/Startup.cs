@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyDictionary.Core.Domain;
 using MyDictionary.Infrastructure.Interfaces;
 using MyDictionary.Infrastructure.Repositories;
 using MyDictionary.Infrastructure.Respositories;
-using MyDictionary.Infrastructure.Services;
 
 namespace MyDictionary
 {
@@ -53,9 +49,8 @@ namespace MyDictionary
                 Configuration.GetValue<string>("WordsApi:Uri")
                 , Configuration.GetValue<string>("WordsApi:Host")
                 , Configuration.GetValue<string>("WordsApi:Key")));
-            services.AddSingleton<IWordRepository>(s => new MerriamWebsterDictionaryRepository(Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Uri")
+            services.AddSingleton<IApiWordRepository>(s => new MerriamWebsterDictionaryRepository(Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Uri")
                 , Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Key")));
-            services.AddSingleton<IUserWordService, UserWordService>();
             services.AddSingleton<IUserWordRepository>(s => new SqlUserWordRepository(Configuration.GetConnectionString("UserWordConnection")));
             //services.AddRazorPages();
 

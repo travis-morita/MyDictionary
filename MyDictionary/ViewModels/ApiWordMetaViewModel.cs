@@ -12,7 +12,7 @@ namespace MyDictionary.Web.ViewModels
         public string Spelling { get; set; } 
         public string Syllables { get; set; }
         public string WordDisplay { get; set; }
-        public string Pronunciation { get; set; }
+        public IEnumerable<string> Pronunciations { get; set; }
         public IEnumerable<string> Definitions { get; set; }
         public string PartOfSpeech { get; set; }
         public List<string> Synonyms { get; set; }

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace MyDictionary.Infrastructure.Interfaces
 {
-    public interface IWordRepository
+    public interface IApiWordRepository
     {
         
-        IEnumerable<IWord> GetWord(string word);
+        IApiWordResult GetWord(string word);
         Task<string> GetSearchResult(string searchString);
     
     }
