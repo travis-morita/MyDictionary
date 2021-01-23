@@ -8,7 +8,6 @@ namespace MyDictionary.Web.ViewModels
     public class ApiWordMetaViewModel
     {
 
-        public string UserId { get; set; }
         public string Spelling { get; set; } 
         public string Syllables { get; set; }
         public string WordDisplay { get; set; }

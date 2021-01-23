@@ -8,5 +8,6 @@ namespace MyDictionary.Core.Domain.Interfaces
     {
         IEnumerable<IWord> Results { get; set; }
         string Error { get; set; }
+        bool NotFound { get; set; }
     }
 }

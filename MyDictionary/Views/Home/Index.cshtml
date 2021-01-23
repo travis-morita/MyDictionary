@@ -14,32 +14,39 @@
     {
         <div class="col-md-12 alert-danger"><h4>@Model.ApiError</h4></div>
     }
+    else if (Model != null && Model.NotFound)
+    {
+        <div class="col-md-12">
+            <h3>Word not found</h3>
+            Suggestions: @Model.Suggestions;
+        </div>
+    }
     else if (Model != null)
     {
 
-        <div class="col-md-12">
-            <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
-                <input hidden asp-for="@Model.ApiWordMeta.First().WordDisplay" name="Word" />
-                <h3>
-                    @Model.ApiWordMeta.First().WordDisplay @*<span class="font-italic " style="font-size: .6em">@Model.ApiWordMeta.First().PartOfSpeech</span>*@
-                </h3>
+    <div class="col-md-12">
+        <form asp-controller="MyWords" asp-action="@(Model.IsSaved ? "Delete" : "Add")">
+            <input hidden asp-for="@Model.ApiWordMeta.First().WordDisplay" name="Word" />
+            <h3>
+                @Model.ApiWordMeta.First().WordDisplay @*<span class="font-italic " style="font-size: .6em">@Model.ApiWordMeta.First().PartOfSpeech</span>*@
+            </h3>
 
-                @if (Model.IsSaved)
-                {
-                    <button id="inputSubmit" type="submit">
-                        <i class="fa fa-bookmark" aria-hidden="true"></i>
-                    </button>
-                }
-                else
-                {
-                    <button id="inputSubmit" type="submit">
-                        <i class="fa fa-bookmark-o" aria-hidden="true"></i>
-                    </button>
-                }
-            </form>
+            @if (Model.IsSaved)
+            {
+                <button id="inputSubmit" type="submit">
+                    <i class="fa fa-bookmark" aria-hidden="true"></i>
+                </button>
+            }
+            else
+            {
+                <button id="inputSubmit" type="submit">
+                    <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                </button>
+            }
+        </form>
 
-        </div>
-        @Html.DisplayFor(m => m.ApiWordMeta);
+    </div>
+    @Html.DisplayFor(m => m.ApiWordMeta);
 
     }
 

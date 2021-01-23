@@ -10,5 +10,7 @@ namespace MyDictionary.Web.ViewModels
         public IEnumerable<ApiWordMetaViewModel> ApiWordMeta { get; set; }
         public bool IsSaved { get; set; }
         public string ApiError { get; set; }
+        public bool NotFound { get; set; }
+        public string Suggestions { get; set; }
     }
 }

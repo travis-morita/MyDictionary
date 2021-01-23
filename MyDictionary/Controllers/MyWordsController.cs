@@ -80,15 +80,6 @@ namespace MyDictionary.Web.Controllers
             return View("MyWords", userWords);
         }
 
-        //[HttpGet]
-        //public IActionResult GetWordsJson()
-        //{
-        //    //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    List<UserWord> userWords = _userWordService.GetWordsByUserId("0603f9ea-0223-49b8-9a2b-9ae52de89521").ToList();
-
-        //    return new JsonResult(userWords);
-        //}
-
         [HttpGet]
         public IActionResult GetWordsJson(string id)
         {

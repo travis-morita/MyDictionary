@@ -53,6 +53,17 @@ namespace MyDictionary.Controllers
                 return View(new ApiWordViewModel { ApiError = wordApiResult.Error });
             }
 
+            if (wordApiResult.NotFound)
+            {
+                var viewModel = new ApiWordViewModel
+                {
+                    NotFound = true,
+                    Suggestions = string.Join(", ", wordApiResult.Results.Select(w => w.Id).ToList())
+                };
+
+                return View("Index", viewModel);
+            }
+
             var apiWordViewModel = new ApiWordViewModel
             {
                 ApiWordMeta = wordApiResult.Results.Select(w => new ApiWordMetaViewModel

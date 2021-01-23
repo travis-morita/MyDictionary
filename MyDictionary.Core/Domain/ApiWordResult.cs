@@ -7,5 +7,6 @@ namespace MyDictionary.Core.Domain
     {
         public IEnumerable<IWord> Results { get; set; }
         public string Error { get; set; }
+        public bool NotFound { get; set; }
     }
 }
