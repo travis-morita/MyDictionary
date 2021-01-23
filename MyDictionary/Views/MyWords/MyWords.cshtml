@@ -11,13 +11,13 @@
     <div class="col-sm-4">
         <form id="form-delete" method="post" asp-controller="MyWords" asp-action="DeleteFromList">
             <table class="table">
-                <thead>
+                @*<thead>
                     <tr>
                         <th scope="col">
                             @Html.DisplayNameFor(model => model.Spelling)
                         </th>
                     </tr>
-                </thead>
+                </thead>*@
                 <tbody>
                     @foreach (var item in Model)
                     {
@@ -38,7 +38,6 @@
                 </tbody>
             </table>
         </form>
-        <a href="#" id="qoo" rel="popover" class="circle"> Click to popover</a>
         <!-- Delete Confirmation -->
         <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
