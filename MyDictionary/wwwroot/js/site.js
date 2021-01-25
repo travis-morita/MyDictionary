@@ -30,23 +30,5 @@ $(document).ready(function () {
         },
         autoFocus: true
     });
-
-    //$("#word").autocomplete({
-    //    source: function (request, response) {
-    //        $.ajax({
-    //            url: "/Home/StringSearch/?searchString=" + request.term,
-    //            method: 'get',
-    //            success: function (data) {
-    //                var obj = JSON.parse(data);
-    //                response(obj.results.data);
-    //            }
-    //        });
-    //    },
-    //    minLength: 3,
-    //    error: function (message) {
-    //        alert(message);
-    //    },
-    //    autoFocus: true
-    });
 });
 

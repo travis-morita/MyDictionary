@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyDictionary.Core.Domain;
@@ -10,7 +9,7 @@ using MyDictionary.Web.ViewModels;
 
 namespace MyDictionary.Web.Controllers
 {
-   
+
     public class MyWordsController : BaseController
     {
         private readonly ILogger<MyWordsController> _logger;
@@ -83,7 +82,6 @@ namespace MyDictionary.Web.Controllers
         [HttpGet]
         public IActionResult GetWordsJson(string id)
         {
-            //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             List<UserWord> userWords = _userWordRepository.GetWordsByUserId(id).ToList();
 
             return new JsonResult(userWords);

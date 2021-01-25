@@ -1,5 +1,4 @@
 ﻿using MyDictionary.Core.Domain.Interfaces;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace MyDictionary.Core.Domain

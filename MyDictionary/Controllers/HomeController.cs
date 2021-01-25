@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,11 +26,6 @@ namespace MyDictionary.Controllers
 
         
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
@@ -71,7 +65,7 @@ namespace MyDictionary.Controllers
                     Spelling = w.Id,
                     PartOfSpeech = w.PartOfSpeech,
                     Syllables = w.Syllables,
-                    WordDisplay = w.Id, //(w.Id.IndexOf(":") > 0 ? w.Id.Substring(0, w.Id.IndexOf(":")) : w.Id),
+                    WordDisplay = w.Id,
                     Definitions = w.Definitions,
                     Pronunciations = w.Pronunciations
                 }).Where(w => w.WordDisplay.ToLower() == word.ToLower()),
@@ -105,25 +99,6 @@ namespace MyDictionary.Controllers
 
             return new JsonResult(apiWordMeta);
         }
-
-        
-        [HttpGet]
-        public async Task<string> StringSearch(string searchString)
-        {
-            var searchResults = await _wordRepository.GetSearchResult(searchString);
-            return searchResults;
-            //return JsonConvert.SerializeObject(searchResults.Results.data);
-        }
-
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<JsonResult> StringSearchJson(string id)
-        {
-            var searchResults = await _wordRepository.GetSearchResult(id);
-            return new JsonResult(searchResults);
-            //return JsonConvert.SerializeObject(searchResults.Results.data);
-        }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

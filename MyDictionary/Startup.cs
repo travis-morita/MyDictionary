@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyDictionary.Infrastructure.Interfaces;
 using MyDictionary.Infrastructure.Repositories;
-using MyDictionary.Infrastructure.Respositories;
 
 namespace MyDictionary
 {
@@ -45,11 +44,6 @@ namespace MyDictionary
                     options.ClientSecret = "_Z11GsRMjSNW4uKGt_6tHKKW";
                 });
 
-
-            services.AddSingleton<IWordLookupRepository>(s => new RapidApiRepository(
-                Configuration.GetValue<string>("WordsApi:Uri")
-                , Configuration.GetValue<string>("WordsApi:Host")
-                , Configuration.GetValue<string>("WordsApi:Key")));
             services.AddSingleton<IApiWordRepository>(s => new MerriamWebsterDictionaryRepository(Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Uri")
                 , Configuration.GetValue<string>("MerriamWebsterDictionaryApi:Key")));
             services.AddSingleton<IUserWordRepository>(s => new SqlUserWordRepository(Configuration.GetConnectionString("UserWordConnection")));
