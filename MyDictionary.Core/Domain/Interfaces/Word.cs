@@ -9,6 +9,5 @@ namespace MyDictionary.Core.Domain.Interfaces
         public Syllables Syllables { get; set; }
         public string Pronunciation { get; set; }
         public IList<WordDetails> WordDetails { get; set; }
-        public bool Saved { get; set; }
     }
 }
