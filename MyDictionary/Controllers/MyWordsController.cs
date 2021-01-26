@@ -80,9 +80,10 @@ namespace MyDictionary.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetWordsJson(string id)
+        public IActionResult GetWordsJson()
         {
-            List<UserWord> userWords = _userWordRepository.GetWordsByUserId(id).ToList();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<UserWord> userWords = _userWordRepository.GetWordsByUserId(userId).ToList();
 
             return new JsonResult(userWords);
         }

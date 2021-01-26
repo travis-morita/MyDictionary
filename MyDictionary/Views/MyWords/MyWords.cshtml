@@ -10,27 +10,42 @@
 <div class="row">
     <div class="col-sm-4">
         <form id="form-delete" method="post" asp-controller="MyWords" asp-action="DeleteFromList">
-            <table class="table table-striped table-bordered table-hover table-responsive-sm">
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td style="font-size: 20px; word-break: break-all">
-                                <a asp-controller="Home" asp-action="GetWord"
-                                    asp-route-word="@item.Spelling" 
-                                    data-poload="/Home/GetWordJson/@item.Spelling" data-toggle="popover">@item.Spelling</a><br />
-                                <span style="font-size: 12px;">@item.CreatedDate.ToString("MMM dd, yyyy")</span>
-                            </td>
-                            <td style="text-align: right">
-                                <button id="@item.Spelling" type="button" value="Delete" class="btn delete-word" data-target="#confirm-delete" data-toggle="modal">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    }
+            <table class="table table-striped table-bordered table-hover table-responsive-sm" id="our-table">
+                <thead>
+                    <tr>
+                        <th>Word</th>
+                        <th>Date Added</th>
+                        <th></th>
+                    </tr>       
+                </thead>
+                <tbody id="table-body">
                 </tbody>
             </table>
+            @*<table class="table table-striped table-bordered table-hover table-responsive-sm">
+                <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="font-size: 20px; word-break: break-all">
+                                    <a asp-controller="Home" asp-action="GetWord"
+                                       asp-route-word="@item.Spelling"
+                                       data-poload="/Home/GetWordJson/@item.Spelling" data-toggle="popover">@item.Spelling</a><br />
+                                    <span style="font-size: 12px;">@item.CreatedDate.ToString("MMM dd, yyyy")</span>
+                                </td>
+                                <td style="text-align: right">
+                                    <button id="@item.Spelling" type="button" value="Delete" class="btn delete-word" data-target="#confirm-delete" data-toggle="modal">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+            </table>*@
         </form>
+        <div class="container">
+            <div id="pagination-wrapper"></div>
+        </div>
+
         <!-- Delete Confirmation -->
         <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -51,23 +66,59 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript" src="~/js/site.js"></script>
+    <script type="text/javascript" src="~/js/paging.js"></script>
+
     <script type="text/javascript">
         $(function () {
+
+            var buildTable = (tableId) => {
+                var data = paging.pagination(paging.state.querySet, paging.state.page, paging.state.rows)
+
+                var table = $(tableId)
+                for (var i = 1 in data.querySet) {
+
+                    var row =
+                        `<tr>
+                            <td style="font-size: 16px; word-break: break-all">
+                                <a data-poload="/Home/GetWordJson/${data.querySet[i].spelling}" data-toggle="popover" 
+                                    href="/Home/GetWord?word=${data.querySet[i].spelling}" data-original-title="" 
+                                    title="" aria-describedby="popover697434">${data.querySet[i].spelling}</a>
+                            </td>
+                            <td>
+                                <span style="">${new Date(data.querySet[i].createdDate).toDateString().substring(4)}</span>
+                            </td>
+                            <td style="text-align: right">
+                                <button id="${data.querySet[i].spelling} type="button" value="Delete" class="btn delete-word" data-target="#confirm-delete" data-toggle="modal">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>`
+                    table.append(row)
+                }
+
+                paging.pageButtons(data.pages)
+            }
+
+            paging.setPages(1, 10, 5);
+            paging.loadData('/MyWords/GetWordsJson?id=' + getQueryString('id') + '*', function () { return buildTable('#table-body'); });
+
+
             $('.delete-word').click(function () {
                 var btnId = this.id;
-               // $('#form-delete').attr('asp-route-id', this.id);
-                $('#form-delete').attr('action', function(i, value) {
+                // $('#form-delete').attr('asp-route-id', this.id);
+                $('#form-delete').attr('action', function (i, value) {
                     return value + "/" + btnId;
                 });
             });
- 
+
             $('#confirm').click(function (e) {
                 /* when the submit button in the modal is clicked, submit the form */
                 $('#form-delete').submit();
-            });       
+            });
 
 
-            $('*[data-poload]').hover(function() {
+            $('*[data-poload]').hover(function () {
                 var e = $(this);
                 e.off('hover');
                 $.get(e.data('poload'), function (d) {
@@ -93,7 +144,7 @@
             });
 
 
-            // hide any open popovers 
+            // hide any open popovers
             var hidePopovers = (e) => {
                 $('[data-toggle=popover]').each(function () {
                     if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
@@ -103,7 +154,11 @@
             };
 
         });
-            
-        
+
+
+
+
+
+
     </script>
 }
